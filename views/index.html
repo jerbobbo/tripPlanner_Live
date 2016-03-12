@@ -11,7 +11,7 @@
 
   </div>
 </div>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkarjA8hlysMC5aK7ywsrUwYY6UwpnXG0&sensor=true"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwgX7_5UpW_WWVNh8z0yw90bqmfx9Gm9o&sensor=true"></script>
 <script>
 function initialize_gmaps() {
     // initialize new google maps LatLng object
@@ -35,9 +35,18 @@ function initialize_gmaps() {
     // Add the marker to the map by calling setMap()
     marker.setMap(map);
 }
-
 $(document).ready(function() {
     initialize_gmaps();
 });
+
+</script>
+<script>
+  {% autoescape false %}
+  // note to instructors: next iteration, change `all_xyz` to `templateXyz`
+  var hotels = {{ hotels | json }};
+  var restaurants = {{ restaurants | json }};
+  var activities = {{ activities | json }};
+
+  {% endautoescape %}
 </script>
 {% endblock %}

@@ -3,13 +3,13 @@
     <div class='row'>
       <div class='col-xs-9'>
     <select id='{{category}}Chooser' data-category='{{ category }}' class='form-control'>
-      {% for item in items %}
-        <option value='{{ item.id }}'>{{item.name}}</option>
+      {% for index, item in items %}
+        <option value='{{ index }}'>{{item.name}}</option>
       {% endfor %}
     </select>
       </div>
       <div class='col-xs-3'>
-        <button class='btn btn-sm btn-primary'>+</button>
+        <button class='btn btn-sm btn-primary' data-category='{{ category }}'>+</button>
       </div>
     </div>
 </div>
