@@ -53,7 +53,8 @@ function connect(){
   if(_conn)
     return _conn;
   _conn = new Promise(function(resolve, reject){
-    mongoose.connect(process.env.CONN, function(){
+    mongoose.connect(process.env.CONN, function(err){
+      if(err) return reject(err);
       resolve(mongoose.connection);
     });
   });

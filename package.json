@@ -7,7 +7,7 @@
     "seed": "CONN=mongodb://localhost/tp-1601F node seed/tripplanner-seed.js",
     "test": "CONN=mongodb://localhost/tp-1601F-test ./node_modules/mocha/bin/mocha",
     "start-dev": "gulp sass:watch & CONN=mongodb://localhost/tp-1601F nodemon server",
-    "start" : "node server"
+    "start" : "gulp sass:watch & CONN=mongodb://localhost/tp-1601F nodemon server"
   },
   "author": "",
   "license": "ISC",
