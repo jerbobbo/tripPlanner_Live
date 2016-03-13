@@ -13,6 +13,8 @@ Switch to day when button is selected
 */
 var map;
 var days = [];
+var currDay = 0;
+
 function initialize_gmaps() {
     // initialize new google maps LatLng object
     var myLatlng = new google.maps.LatLng(40.705189,-74.009209);
@@ -49,7 +51,7 @@ function setMarker(myLatLng, index, category) {
     title: 'Hello World!'
   });
 
-  days[0].markers[category + index] = marker;
+  days[currDay].markers[category + index] = marker;
   marker.setMap(map);
   map.setCenter(myLatLng);
 }
@@ -76,7 +78,7 @@ $(document).ready(function() {
 		var index = objectChosen.val();
 		var currObj = keys[category][index];
 
-		days[0][category][index] = currObj;
+		days[currDay][category][index] = currObj;
 		console.log(days);
 
 		var currList = '#' + category + '_list';
@@ -94,10 +96,21 @@ $(document).ready(function() {
 		var index = $(this).data("index");
 		var category = $(this).data("category");
 		console.log(index, category);
-		delete days[0][category][index];
-		delete days[0].markers[category + index];
+		delete days[currDay][category][index];
+		days[currDay].markers[category + index].setMap(null);
+		delete days[currDay].markers[category + index];
 		$('#'+category+index).remove();
 		console.log(days);
+
+	})
+
+	$('#day_picker').on('click', 'li', function() {
+		console.log('day picked');
+		$('#day_panels li').remove();
+		initialize_gmaps();
+		currDay = $(this).data("day");
+
+		
 
 	})
 	
