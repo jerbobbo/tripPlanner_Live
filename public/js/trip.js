@@ -76,6 +76,15 @@ function populatePlans(category, index, keys) {
 	setMarker(myLatLng, index, category);//adds a marker for the location
 }
 
+function setDay() {
+
+	// console.log(currDay);
+	// console.log(typeof currDay);
+	currDayActual = currDay + 1;
+	$('#day_' + currDayActual).addClass('active');
+	$('#currentDay').text('Day ' + currDayActual);
+}
+
 $(document).ready(function() {
 	initialize_gmaps();
 	var keys = {'Hotels': hotels, 'Restaurants': restaurants, 'Activities': activities}
@@ -90,6 +99,7 @@ $(document).ready(function() {
 
 	days.push(new Itinerary());
 	setDayTabs();
+	setDay();
 
 	$('.panel-body .btn-primary').on('click', function() {
 		var category = $(this).data("category");
@@ -129,9 +139,12 @@ $(document).ready(function() {
 		console.log('day picked');
 		$('#day_panels li').remove();
 		initialize_gmaps();
+		var currDayActual = currDay + 1;
+		console.log('currentDayActual',currDayActual)
+		$('#day_' + currDayActual).removeClass('active');
+
 		currDay = $(this).data("day");
-		currDay = +currDay;
-		console.log(days[currDay]);
+		setDay();
 
 		for (var category in keys) {
 			// console.log ('category:',category);
@@ -146,8 +159,28 @@ $(document).ready(function() {
 
 	$('#add_day').on('click', function() {
 		days.push(new Itinerary());
+		currDay = days.length-1;
 		setDayTabs();
+		setDay();
 	})
 	
+	$('#removeDay').on('click', function() {
+		days.splice(currDay, 1);
+		currDay = 0;
+		setDayTabs();
+		setDay();
+
+		$('#day_panels li').remove();
+		initialize_gmaps();
+
+		for (var category in keys) {
+	// console.log ('category:',category);
+	// console.log(days[currDay].category);
+		for( var index in days[currDay][category] ) {
+		// console.log('currDay:', days[currDay].category);
+			populatePlans(category, index, keys)
+		}
+}
+	})
 
 })
