@@ -15,6 +15,7 @@ var map;
 var days = [];
 var currDay = 0;
 
+
 function initialize_gmaps() {
     // initialize new google maps LatLng object
     var myLatlng = new google.maps.LatLng(40.705189,-74.009209);
@@ -26,7 +27,7 @@ function initialize_gmaps() {
     };
     // get the maps div's HTML obj
     var map_canvas_obj = document.getElementById("map-canvas");
-    console.log(map_canvas_obj);
+    //console.log(map_canvas_obj);
     // initialize a new Google Map with the options
     map = new google.maps.Map(map_canvas_obj, mapOptions);
     // Add the marker to the map
@@ -56,12 +57,29 @@ function setMarker(myLatLng, index, category) {
   map.setCenter(myLatLng);
 }
 
+function setDayTabs() {
+	$('#day_picker li').remove();
+	for (var i = 0; i < days.length;i++) {
+		var day = i+1;
+		var newDay = $('<li id="day_' + day + '" data-day="'+ i +'"><a>Day ' + day +'</a></li>');
+		console.log(newDay);
+		$('#day_picker').append(newDay);
+	}
+}
 
+function populatePlans(category, index, keys) {
+	var currList = '#' + category + '_list';
+	var currObj = keys[category][index];
+	var newListItem = '<li id=' + category + index + '>' + currObj.name + '<button class="btn btn-sm btn-danger" data-index=' + index +' data-category='+ category +'>x</button></li>';
+	$(currList).append(newListItem);
+	var myLatLng = currObj.place.location;
+	setMarker(myLatLng, index, category);//adds a marker for the location
+}
 
 $(document).ready(function() {
 	initialize_gmaps();
-
 	var keys = {'Hotels': hotels, 'Restaurants': restaurants, 'Activities': activities}
+
 
 	var Itinerary = function() {
 		this.Hotels = {};
@@ -71,24 +89,27 @@ $(document).ready(function() {
 	}
 
 	days.push(new Itinerary());
+	setDayTabs();
 
-	$('.btn-primary').on('click', function() {
+	$('.panel-body .btn-primary').on('click', function() {
 		var category = $(this).data("category");
 		var objectChosen = $('#'+category+'Chooser');
 		var index = objectChosen.val();
 		var currObj = keys[category][index];
-
+		//add object to day array
 		days[currDay][category][index] = currObj;
 		console.log(days);
 
-		var currList = '#' + category + '_list';
-		var newListItem = '<li id=' + category + index + '>' + currObj.name + '<button class="btn btn-sm btn-danger" data-index=' + index +' data-category='+ category +'>x</button></li>';
+		// var currList = '#' + category + '_list';
+		// var newListItem = '<li id=' + category + index + '>' + currObj.name + '<button class="btn btn-sm btn-danger" data-index=' + index +' data-category='+ category +'>x</button></li>';
 
-		$(currList).append(newListItem);
+		// $(currList).append(newListItem);
 
-		var myLatLng = currObj.place.location;
+		// var myLatLng = currObj.place.location;
 
-		setMarker(myLatLng, index, category);//adds a marker for the location
+		// setMarker(myLatLng, index, category);//adds a marker for the location
+
+		populatePlans(category, index, keys);
 		
 	})
 
@@ -109,9 +130,23 @@ $(document).ready(function() {
 		$('#day_panels li').remove();
 		initialize_gmaps();
 		currDay = $(this).data("day");
+		currDay = +currDay;
+		console.log(days[currDay]);
 
-		
+		for (var category in keys) {
+			// console.log ('category:',category);
+			// console.log(days[currDay].category);
+			for( var index in days[currDay][category] ) {
+				// console.log('currDay:', days[currDay].category);
+				populatePlans(category, index, keys)
+			}
+		}
 
+	})
+
+	$('#add_day').on('click', function() {
+		days.push(new Itinerary());
+		setDayTabs();
 	})
 	
 
